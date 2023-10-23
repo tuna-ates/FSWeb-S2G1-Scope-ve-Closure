@@ -3,25 +3,29 @@
 // Başlangıç Challenge'ı
 
 /**Örnek Görev: İlkini Dön
- * 
+ *
  * Bu örnek sonradan gelecek olan görevleri nasıl çözeceğinizi size gösterecek.
- * 
+ *
  * Aşağdıaki Yüksek dereceden fonskiyonu(higher-order function) kullanarak aşağıdakileri yapınız
  *  1. Stringlerden oluşan bir array'i parametre olarak alın
- *  2. Bir string'i değişken olarak alan bir callback fonksiyonunu parametre olarak alın 
+ *  2. Bir string'i değişken olarak alan bir callback fonksiyonunu parametre olarak alın
  *  3. Array'in İLK elemanını değişken olarak alarak çalışacak olan callback fonksiyonunun sonucunu dönün
- * 
+ *
  * Aşağıdaki kodlar bu görevin nasıl yapılacağına örnek olacaktır
  * Bu fonskiyon 'asas' dönmeli(return)
-*/
+ */
 
 function ilkiniDon(stringArray, callback) {
-  return callback(stringArray[0])
+  return callback(stringArray[0]);
 }
-console.log('örnek görev:', ilkiniDon(['as','sa'],function(metin){return metin+metin}));
+console.log(
+  "örnek görev:",
+  ilkiniDon(["as", "sa"], function (metin) {
+    return metin + metin;
+  })
+);
 
 // Başlangıç Challenge'ı Sonu
-
 
 ///// M V P ///////
 
@@ -40,19 +44,21 @@ console.log('örnek görev:', ilkiniDon(['as','sa'],function(metin){return metin
 function skorArtirici() {
   let skor = 0;
   return function skorGuncelle() {
-   return skor++;
-  }
+    return skor++;
+  };
 }
-
 const skor1 = skorArtirici();
+//skor1 kodları almış olduğu veriable local scope içindedir sadece skorArttirici fonk. içinden ulaşılabilir.
+//skor1 i closure kullanmaktadır çünkü almış olduğu veriable dışardan değiştirilse dahi etkilenmez.
+//mesela skor durumu bir takıma özel olduğu zaman (yani heryerden değiştirilemez ulaşılamaz sadece skorArtirici fonk. içinde erişilir) skor1 tercih edilebilir
 
 // skor2 kodları
 let skor = 0;
-
 function skor2() {
   return skor++;
 }
-
+//skor2 kodalarının almış olduğu veriable ise global scope içindedir verialeye her yerden ulaşılabilir.
+//skor durumu birden çok takımın skoru ise (yani takım fark etmeksizin) her takımın skoru arttığı veya azaldığı zamanlarda skor2 kullanılabilir
 
 /* Görev 2: takimSkoru() 
 Aşağıdaki takimSkoru() fonksiyonununda aşağıdakileri yapınız:
@@ -64,12 +70,12 @@ Aşağıdaki takimSkoru() fonksiyonununda aşağıdakileri yapınız:
 Not: Bu fonskiyon, aşağıdaki diğer görevler için de bir callback fonksiyonu olarak da kullanılacak
 */
 
-function takimSkoru(/*Kodunuzu buraya yazınız*/){
-    /*Kodunuzu buraya yazınız*/
+function takimSkoru() {
+  const result = Math.floor(Math.random() * 16) + 10;
+  return result;
 }
 
-
-
+//console.log(takimSkoru());
 
 /* Görev 3: macSonucu() 
 Aşağıdaki macSonucu() fonksiyonununda aşağıdakileri yapınız:
@@ -84,16 +90,23 @@ Aşağıdaki macSonucu() fonksiyonununda aşağıdakileri yapınız:
   "EvSahibi": 92,
   "KonukTakim": 80
 }
-*/ 
+*/
 
-function macSonucu(/*Kodunuzu buraya yazınız*/){
-  /*Kodunuzu buraya yazınız*/
+function macSonucu(callback, çeyrekNumber) {
+ let evSahibi=0;
+ let konukTakim=0;
+  
+  for (let i = 0; i < çeyrekNumber; i++) {
+    evSahibi += callback();
+     konukTakim +=callback();
+  }
+  return {
+    "EvSahibi":evSahibi ,
+  "KonukTakim": konukTakim
+  }
 }
-
-
-
-
-
+console.log("-------------------görev 3-------------------");
+console.log(macSonucu(takimSkoru, 4));
 
 /* Zorlayıcı Görev 4: periyotSkoru()
 Aşağıdaki periyotSkoru() fonksiyonununda aşağıdakileri yapınız:
@@ -108,13 +121,17 @@ Aşağıdaki periyotSkoru() fonksiyonununda aşağıdakileri yapınız:
 }
   */
 
-
-function periyotSkoru(/*Kodunuzu buraya yazınız*/) {
-  /*Kodunuzu buraya yazınız*/
-
+function periyotSkoru(callback) {
+  let evSahibi=callback();
+  let konukTakim=callback();
+  const result={
+    "EvSahibi": evSahibi,
+    "KonukTakim": konukTakim
+  }
+  return result;
 }
-
-
+console.log("-------------------görev 4-------------------");
+console.log(periyotSkoru(takimSkoru));
 /* Zorlayıcı Görev 5: skorTabelasi() 
 Aşağıdaki skorTabelasi() fonksiyonunu kullanarak aşağıdakileri yapınız:
   1. İlk parametre olarak Görev 4'te oluşturduğumuz 'periyotSkoru'nu bir değişken olarak almalı
@@ -146,17 +163,50 @@ MAÇ UZAR ise skorTabelasi(periyotSkoru,takimSkoru,4)
 ] */
 // NOTE: Bununla ilgili bir test yoktur. Eğer logladığınız sonuçlar yukarıdakine benziyor ise tmamlandı sayabilirsiniz.
 
-function skorTabelasi(/*Kodunuzu buraya yazınız*/) {
-  /*Kodunuzu buraya yazınız*/
-}
+function skorTabelasi(receivedPeriyotSkoru,receivedTakimSkoru,çeyrekNumber) {
+  let skorArray=[];
+  let macSkoru={
+        evSahibi:0,
+        konukTakim:0
+      }
+  for(let i=0;i<çeyrekNumber;i++){
+      let periyotSkoru=receivedPeriyotSkoru(receivedTakimSkoru);
+      //metni hazırla skor arrayine pushla
+      let metin=`${i}. Periyot: Ev Sahibi ${periyotSkoru.EvSahibi} - Konuk Takım ${periyotSkoru.KonukTakim}`;
+        skorArray.push(metin);
+      //periyot skorunu maç skoruna ekle
+      macSkoru.evSahibi=periyotSkoru.EvSahibi;
+      macSkoru.konukTakim=periyotSkoru.KonukTakim;
+  }
+  //skorlar eşit ise uzatmaları oynat
+    //metni hazırla skor arreyine pushla
+    //uzatma skorunu maç skoruna ekle
+    let u=1;
+    while(macSkoru.evSahibi===macSkoru.konukTakim){
+      let uzatmaSkoru=receivedPeriyotSkoru(receivedTakimSkoru);
+      let metin=`${u}. Uzatma: Ev Sahibi ${uzatmaSkoru.EvSahibi} - Konuk Takım ${uzatmaSkoru.KonukTakim}`;
+      skorArray.push(metin);
+      //uzatma skorunu mac skoruna ekle
+      macSkoru.evSahibi=uzatmaSkoru.EvSahibi;
+      macSkoru.evSahibi=uzatmaSkoru.KonukTakim;
+      u++;
 
+    }
+
+  //maç skorunu hazırla ve skor arreyine ekle
+  let metin=`Maç Sonucu: Ev Sahibi ${macSkoru.evSahibi} - Konuk Takım ${macSkoru.konukTakim}`
+ skorArray.push(metin);
+ return skorArray;
+}
+console.log("-------------------görev 5-------------------");
+console.log(skorTabelasi(periyotSkoru,takimSkoru,5));
 
 
 
 /* Aşağıdaki satırları lütfen değiştirmeyiniz*/
-function sa(){
-  console.log('Kodlar çalışıyor');
-  return 'as';
+function sa() {
+  console.log("Kodlar çalışıyor");
+  return "as";
 }
 sa();
 module.exports = {
@@ -168,4 +218,4 @@ module.exports = {
   macSonucu,
   periyotSkoru,
   skorTabelasi,
-}
+};
